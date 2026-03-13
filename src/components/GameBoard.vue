@@ -86,8 +86,8 @@
 
       <!-- Custom Confirmation Modal -->
       <Teleport to="body">
-        <div v-if="showConfirmModal" class="modal-overlay">
-          <div class="modal-content animate-fade">
+        <div v-if="showConfirmModal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.7);">
+          <div class="modal-content">
             <p style="margin-bottom: 2rem;">{{ confirmMessage }}</p>
             <div style="display: flex; gap: 1rem; justify-content: center; align-items: stretch; width: 100%;">
               <button class="primary" :style="{ '--btn-color': myColor, '--btn-shadow': myShadowColor }" @click="executeConfirm" style="color: black; flex: 1; padding: 0.8rem;">Yes</button>
@@ -97,8 +97,8 @@
         </div>
 
         <!-- Start Game Modal -->
-        <div v-if="showStartModal && gameData.status === 'in_progress'" class="modal-overlay" @click="closeStartModal">
-          <div class="modal-content animate-fade" @click.stop>
+        <div v-if="showStartModal && gameData.status === 'in_progress'" class="modal-overlay" style="background: rgba(0, 0, 0, 0.7)" @click="closeStartModal">
+          <div class="modal-content" @click.stop>
             <h2 style="color: var(--text-bright); margin-bottom: 1rem;">Your Secret Goal</h2>
             <div class="word-display goal-word" style="margin-bottom: 1.5rem;">
               <div class="letter-box" v-for="(letter, idx) in myGoal" :key="'startmodal-'+idx">
@@ -113,8 +113,8 @@
         </div>
 
         <!-- Game Over Modal -->
-        <div v-if="isGameOver" class="modal-overlay">
-          <div class="modal-content animate-fade">
+        <div v-if="isGameOver" class="modal-overlay" style="background: rgba(0, 0, 0, 0.7);">
+          <div class="modal-content">
             <h2 :style="{ color: gameOverColor, marginBottom: '1rem', fontSize: '2rem' }">{{ gameOverTitle }}</h2>
             <p style="margin-bottom: 2rem;">{{ gameOverMessage }}</p>
             <button class="text-btn secondary" @click="leaveGracefully">Back to Lobby</button>
@@ -127,7 +127,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { supabase } from '../services/supabase';
 import { validateTurn, isGameTied } from '../utils/gameLogic';
 
@@ -328,6 +328,12 @@ onUnmounted(() => {
   if (channel) {
     supabase.removeChannel(channel);
   }
+
+  // Clear the blur when returning to the lobby
+  const appEl = document.getElementById('app');
+  if (appEl) {
+    appEl.style.filter = 'none';
+  }
 });
 
 function scrollToBottom() {
@@ -457,4 +463,21 @@ async function submitTurn() {
     currentInput.value = '';
   }
 }
+
+// Check if any of the three modals are currently visible
+const isModalOpen = computed(() => {
+  return showConfirmModal.value ||
+         (showStartModal.value && gameData.value?.status === 'in_progress') || 
+         isGameOver.value;
+});
+
+// Watch for changes and blur the main app container
+watch(isModalOpen, (isOpen) => {
+  const appEl = document.getElementById('app');
+  if (appEl) {
+    appEl.style.filter = isOpen ? 'blur(8px)' : 'none';
+    appEl.style.transition = 'filter 0.3s ease';
+  }
+}, { immediate: true });
+
 </script>
