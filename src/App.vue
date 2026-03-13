@@ -88,7 +88,7 @@ const titleLetterStyle = computed(() => {
     color: color,
     borderColor: color,
     textShadow: `0 0 10px ${color}`,
-    boxShadow: `inset 0 0 10px ${isP1 ? 'rgba(0, 229, 255, 0.2)' : 'rgba(255, 0, 127, 0.2)'}`
+    boxShadow: `inset 0 0 10px ${isP1 ? 'var(--p1-shadow)' : 'var(--p2-shadow)'}`
   };
 });
 

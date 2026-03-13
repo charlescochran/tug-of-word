@@ -266,14 +266,14 @@ input:focus {
   color: var(--p1-color);
   border-color: var(--p1-color);
   text-shadow: 0 0 10px var(--p1-color);
-  box-shadow: inset 0 0 10px rgba(0, 229, 255, 0.2);
+  box-shadow: inset 0 0 10px var(--p1-shadow);
 }
 
 .letter-box.p2-modified {
   color: var(--p2-color);
   border-color: var(--p2-color);
   text-shadow: 0 0 10px var(--p2-color);
-  box-shadow: inset 0 0 10px rgba(255, 0, 127, 0.2);
+  box-shadow: inset 0 0 10px var(--p2-shadow);
 }
 
 .letter-box.locked {
