@@ -178,7 +178,12 @@ function closeStartModal() {
   showStartModal.value = false; 
   // Focus the input box immediately after closing the modal if it's our turn
   if (isMyTurn.value) {
-    nextTick(() => { if (wordInput.value) wordInput.value.focus(); });
+    nextTick(() => {
+      if (wordInput.value) {
+        wordInput.value.focus({ preventScroll: true });
+        setTimeout(scrollToBottom, 300);
+      }
+    });
   }
 }
 
@@ -251,11 +256,12 @@ const previousWord = computed(() => {
 
 onMounted(() => {
   window.addEventListener('keydown', handleGlobalKeydown);
-  
+  window.addEventListener('resize', scrollToBottom);
+
   channel = supabase.channel(`game_${props.game.access_code}`, {
     config: { presence: { key: props.playerId } }
   });
-  
+
   channel
     .on('presence', { event: 'sync' }, () => {
       const state = channel.presenceState();
@@ -264,18 +270,21 @@ onMounted(() => {
     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'games', filter: `id=eq.${props.game.id}` }, (payload) => {
       gameData.value = payload.new;
       errorMessage.value = '';
-      
+
       // Auto-close confirmation modals if the game ends abruptly (like an opponent resigning)
       if (['p1_won', 'p2_won', 'tied', 'p1_resigned', 'p2_resigned', 'p1_accepted_draw', 'p2_accepted_draw'].includes(payload.new.status)) {
         closeConfirm();
       }
-      
+
       scrollToBottom();
-      
+
       // Auto-focus input when it becomes our turn
       if (payload.new.status === 'in_progress' && payload.new.current_turn_player_id === props.playerId) {
         nextTick(() => {
-          if (wordInput.value) wordInput.value.focus();
+          if (wordInput.value & !showStartModal.value) {
+              wordInput.value.focus({ preventScroll: true });
+              setTimeout(scrollToBottom, 300);
+          }
         });
       }
     })
@@ -319,8 +328,9 @@ async function leaveGracefully() {
 
 onUnmounted(() => {
   window.removeEventListener('keydown', handleGlobalKeydown);
+  window.removeEventListener('resize', scrollToBottom);
   window.removeEventListener('beforeunload', handleBeforeUnload);
-  
+
   if (gameData.value.status !== 'waiting') {
      cleanupGameIfLast();
   }
