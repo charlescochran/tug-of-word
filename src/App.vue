@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <!-- Letter-box title (always shown, color adapts to context) -->
-    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 0.4rem; margin-bottom: 1rem; margin-top: 0.5rem; flex-shrink: 0;">
-      <div v-for="letter in ['T','U','G']" :key="'title-'+letter" class="letter-box" :class="titleLetterClass" :style="titleLetterStyle" style="width: 2.2rem; height: 2.8rem; font-size: 1.1rem;">{{ letter }}</div>
-      <div v-for="letter in ['O','F']" :key="'title-'+letter" class="letter-box" style="width: 2.2rem; height: 2.8rem; font-size: 1.1rem;">{{ letter }}</div>
-      <div v-for="letter in ['W','O','R','D']" :key="'title2-'+letter" class="letter-box" :class="titleLetterClass" :style="titleLetterStyle" style="width: 2.2rem; height: 2.8rem; font-size: 1.1rem;">{{ letter }}</div>
+    <div class="letterbox-title">
+      <div v-for="letter in ['T','U','G']" :key="'title-'+letter" class="letter-box" :class="titleLetterClass" :style="titleLetterStyle">{{ letter }}</div>
+      <div v-for="letter in ['O','F']" :key="'title-'+letter" class="letter-box">{{ letter }}</div>
+      <div v-for="letter in ['W','O','R','D']" :key="'title2-'+letter" class="letter-box" :class="titleLetterClass" :style="titleLetterStyle">{{ letter }}</div>
     </div>
     <div class="glass-panel" :class="{ 'lobby-panel': !gameState }">
       <Lobby 

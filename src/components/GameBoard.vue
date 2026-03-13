@@ -1,20 +1,17 @@
 <template>
   <div class="game-board animate-fade">
+
+    <div class="game-code-box">
+      <span class="game-code-label">Game Code</span>
+      <span class="game-code-value" :style="{ color: myColor, textShadow: '0 0 8px ' + myShadowColor }">{{ gameData.access_code }}</span>
+    </div>
+
     <div v-if="gameData.status === 'waiting'" class="waiting-container">
       <div class="pulse-ring"></div>
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 2rem; background: rgba(0,0,0,0.2); border-radius: 16px; padding: 1.5rem 3rem; width: fit-content; margin-left: auto; margin-right: auto; box-shadow: inset 0 3px 10px rgba(0,0,0,0.4);">
-        <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; opacity: 0.7; margin-bottom: 0.5rem;">Game Code</span>
-        <span style="font-size: 2.5rem; font-weight: 900; letter-spacing: 8px;" :style="{ color: myColor, textShadow: '0 0 15px ' + myShadowColor }">{{ gameData.access_code }}</span>
-      </div>
-      <p class="animate-pulse-slow status-message" style="margin-top: 2rem;">Waiting for Player 2...</p>
+      <p class="animate-pulse-slow status-message" style="margin-top: 1rem;">Waiting for Player 2...</p>
     </div>
-    
-    <template v-else>
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-bottom: 1rem; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 0.5rem 1.5rem; width: fit-content; margin-left: auto; margin-right: auto; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">
-        <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; margin-bottom: 0.2rem;">Game Code</span>
-        <span style="font-size: 1.2rem; font-weight: 900; letter-spacing: 4px;" :style="{ color: myColor, textShadow: '0 0 8px ' + myShadowColor }">{{ gameData.access_code }}</span>
-      </div>
 
+    <template v-else>
       <div v-if="gameData.status === 'in_progress'" class="status-message">
         <span v-if="isMyTurn">Your Turn!</span>
         <span v-else class="animate-pulse-slow" style="opacity: 0.7">Waiting for Opponent...</span>
@@ -38,10 +35,10 @@
             {{ letter }}
           </div>
         </div>
-        
+
         <div class="word-display" v-for="(play, i) in gameData.words" :key="'play-'+i">
-          <div 
-            v-for="(letter, idx) in play.word" 
+          <div
+            v-for="(letter, idx) in play.word"
             :key="'play-'+i+'-'+idx"
             class="letter-box"
             :class="{
@@ -85,8 +82,8 @@
 
       <!-- Custom Confirmation Modal -->
       <Teleport to="body">
-        <div v-if="showConfirmModal" class="modal-overlay animate-fade">
-          <div class="modal-content glass-panel">
+        <div v-if="showConfirmModal" class="modal-overlay">
+          <div class="modal-content animate-fade">
             <p style="margin-bottom: 2rem;">{{ confirmMessage }}</p>
             <div style="display: flex; gap: 1rem; justify-content: center; align-items: stretch; width: 100%;">
               <button class="primary" :style="{ '--btn-color': myColor, '--btn-shadow': myShadowColor }" @click="executeConfirm" style="color: black; flex: 1; padding: 0.8rem;">Yes</button>
@@ -94,10 +91,10 @@
             </div>
           </div>
         </div>
-        
+
         <!-- Start Game Modal -->
-        <div v-if="showStartModal && gameData.status === 'in_progress'" class="modal-overlay animate-fade" @click="closeStartModal">
-          <div class="modal-content glass-panel" @click.stop>
+        <div v-if="showStartModal && gameData.status === 'in_progress'" class="modal-overlay" @click="closeStartModal">
+          <div class="modal-content animate-fade" @click.stop>
             <h2 style="color: var(--text-bright); margin-bottom: 1rem;">Your Secret Goal</h2>
             <div class="word-display goal-word" style="margin-bottom: 1.5rem;">
               <div class="letter-box" v-for="(letter, idx) in myGoal" :key="'startmodal-'+idx">
@@ -112,8 +109,8 @@
         </div>
 
         <!-- Game Over Modal -->
-        <div v-if="isGameOver" class="modal-overlay animate-fade">
-          <div class="modal-content glass-panel">
+        <div v-if="isGameOver" class="modal-overlay">
+          <div class="modal-content animate-fade">
             <h2 :style="{ color: gameOverColor, marginBottom: '1rem', fontSize: '2rem' }">{{ gameOverTitle }}</h2>
             <p style="margin-bottom: 2rem;">{{ gameOverMessage }}</p>
             <button class="text-btn secondary" @click="leaveGracefully">Back to Lobby</button>

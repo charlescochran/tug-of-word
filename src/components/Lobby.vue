@@ -4,12 +4,12 @@
     <template v-else>
       <div class="lobby-content" style="max-width: 450px; margin: 0 auto; width: 100%;">
 
-        <div style="background: rgba(0, 0, 0, 0.25); border-radius: 16px; padding: 2.5rem 2rem; box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 0, 0, 0.3); margin: auto 0; position: relative;">
+        <div style="background: rgba(0, 0, 0, 0.25); border-radius: 16px; padding: 1.5rem 1.5rem; box-shadow: inset 0 4px 15px rgba(0, 0, 0, 0.5); border: 1px solid rgba(0, 0, 0, 0.3); margin: auto 0; position: relative;">
           <div>
-             <button class="primary" @click="createGame" style="width: 100%; padding: 1.2rem; font-size: 1.1rem; letter-spacing: 2px;">Create Game</button>
+             <button class="primary" @click="createGame" style="width: 100%; padding: 1rem; font-size: 1.1rem; letter-spacing: 2px;">Create Game</button>
           </div>
           
-          <div class="lobby-divider" style="margin: 2rem 0;">
+          <div class="lobby-divider" style="margin: 1.5rem 0;">
              <span style="font-size: 0.9rem; font-weight: 700; color: #fff; letter-spacing: 2px;">OR</span>
           </div>
           
@@ -19,9 +19,9 @@
               v-model="joinCode" 
               type="text" 
               maxlength="4" 
-              placeholder="ENTER GAME CODE" 
+              placeholder="ENTER CODE" 
               @keyup.enter.prevent="joinCode.length === 4 ? joinGame() : null"
-              style="font-size: 0.9rem; padding: 1rem; letter-spacing: 6px; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.1); width: 100%; box-sizing: border-box; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none;"
+              style="font-size: 0.8rem; padding: 1rem; letter-spacing: 4px; background: rgba(0,0,0,0.4); border: 2px solid rgba(255,255,255,0.1); width: 100%; box-sizing: border-box; border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom: none;"
             />
             <button class="secondary" style="width: 100%; padding: 0.8rem; font-size: 1rem; letter-spacing: 2px; border-top-left-radius: 0; border-top-right-radius: 0;" @click="joinGame" :disabled="joinCode.length !== 4">
               Join Game
