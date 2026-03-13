@@ -1,17 +1,21 @@
 <template>
   <div class="game-board animate-fade">
 
-    <div class="game-code-box">
-      <span class="game-code-label">Game Code</span>
-      <span class="game-code-value" :style="{ color: myColor, textShadow: '0 0 8px ' + myShadowColor }">{{ gameData.access_code }}</span>
-    </div>
-
     <div v-if="gameData.status === 'waiting'" class="waiting-container">
       <div class="pulse-ring"></div>
-      <p class="animate-pulse-slow status-message" style="margin-top: 1rem;">Waiting for Player 2...</p>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 2.5rem; background: rgba(0,0,0,0.2); border-radius: 16px; padding: 1rem 2rem; width: fit-content; margin-left: auto; margin-right: auto; box-shadow: inset 0 3px 10px rgba(0,0,0,0.4);">
+        <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; margin-bottom: 0.3rem;">Game Code</span>
+        <span style="font-size: 2rem; font-weight: 900; letter-spacing: 6px;" :style="{ color: myColor, textShadow: '0 0 15px ' + myShadowColor }">{{ gameData.access_code }}</span>
+      </div>
+      <p class="animate-pulse-slow status-message" style="margin-top: 2rem;">Waiting for Player 2...</p>
     </div>
 
     <template v-else>
+      <div class="game-code-box">
+        <span class="game-code-label">Game Code</span>
+        <span class="game-code-value" :style="{ color: myColor, textShadow: '0 0 8px ' + myShadowColor }">{{ gameData.access_code }}</span>
+      </div>
+
       <div v-if="gameData.status === 'in_progress'" class="status-message">
         <span v-if="isMyTurn">Your Turn!</span>
         <span v-else class="animate-pulse-slow" style="opacity: 0.7">Waiting for Opponent...</span>
