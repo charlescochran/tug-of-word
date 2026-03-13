@@ -336,6 +336,15 @@ input:focus {
   scrollbar-width: thin;
   scrollbar-color: var(--border-color) transparent;
 }
+
+.scrollback > :first-child {
+  margin-top: auto;
+}
+
+.scrollback > :last-child {
+  margin-bottom: auto;
+}
+
 .scrollback::-webkit-scrollbar {
   width: 6px;
 }
