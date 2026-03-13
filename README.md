@@ -13,6 +13,9 @@ You and your opponent are given the same starting word, but different (secret!) 
 5. If a player cannot play a valid move, the game ends in a **Draw**. The word ladder is stuck!
 
 ## Tech Stack
+
+*WARNING: This project was mostly vibe-coded with Google Antrigravity.*
+
 - Frontend: Vue 3 (Vite)
 - Backend: Supabase (Postgres & Realtime WebSockets)
 - Styling: Vanilla CSS
