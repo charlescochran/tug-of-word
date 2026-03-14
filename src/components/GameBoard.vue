@@ -33,6 +33,11 @@
         </template>
       </div>
 
+      <div v-else-if="isGameOver" class="status-message" style="display: flex; flex-direction: column; gap: 0.2rem; margin-top: 0.5rem;">
+        <span :style="{ color: gameOverColor, fontSize: '1.6rem', fontWeight: '900', letterSpacing: '2px', textShadow: '0 0 10px ' + gameOverColor }">{{ gameOverTitle }}</span>
+        <span style="font-size: 0.9rem; font-weight: 400; opacity: 0.9; color: var(--text-main);">{{ gameOverMessage }}</span>
+      </div>
+
       <div class="scrollback" ref="scrollbackDiv">
         <div class="word-display">
           <div class="letter-box" v-for="(letter, idx) in gameData.start_word" :key="'start-'+idx">
@@ -84,6 +89,10 @@
         <button class="text-btn secondary" @click="confirmDraw" v-if="gameData.status === 'in_progress'">Offer Draw</button>
       </div>
 
+      <div class="match-actions" v-else-if="isGameOver" style="justify-content: center;">
+        <button class="primary" :style="{ '--btn-color': myColor, '--btn-shadow': myShadowColor }" @click="leaveGracefully" style="color: black; padding: 0.8rem 2.5rem; font-size: 1.1rem;">Back to Menu</button>
+      </div>
+
       <!-- Custom Confirmation Modal -->
       <Teleport to="body">
         <div v-if="showConfirmModal" class="modal-overlay" style="background: rgba(0, 0, 0, 0.7);">
@@ -113,11 +122,12 @@
         </div>
 
         <!-- Game Over Modal -->
-        <div v-if="isGameOver" class="modal-overlay" style="background: rgba(0, 0, 0, 0.7);">
-          <div class="modal-content">
+        <div v-if="isGameOver && !isReviewing" class="modal-overlay" style="background: rgba(0, 0, 0, 0.7);">
+          <div class="modal-content animate-fade">
             <h2 :style="{ color: gameOverColor, marginBottom: '1rem', fontSize: '2rem' }">{{ gameOverTitle }}</h2>
             <p style="margin-bottom: 2rem;">{{ gameOverMessage }}</p>
-            <button class="text-btn secondary" @click="leaveGracefully">Back to Lobby</button>
+
+            <button class="primary" :style="{ '--btn-color': myColor, '--btn-shadow': myShadowColor }" @click="isReviewing = true" style="color: black; padding: 0.8rem 2rem; font-size: 1.1rem;">Review Game</button>
           </div>
         </div>
       </Teleport>
@@ -149,6 +159,8 @@ let activePlayersCount = ref(1); // Default to just us
 const showConfirmModal = ref(false);
 const confirmMessage = ref('');
 let confirmAction = null;
+
+const isReviewing = ref(false);
 
 function promptConfirm(message, action) {
   confirmMessage.value = message;
@@ -457,9 +469,9 @@ async function submitTurn() {
 
 // Check if any of the three modals are currently visible
 const isModalOpen = computed(() => {
-  return showConfirmModal.value ||
-         (showStartModal.value && gameData.value?.status === 'in_progress') || 
-         isGameOver.value;
+  return showConfirmModal.value || 
+         (showStartModal.value && gameData.value?.status === 'in_progress') ||
+         (isGameOver.value && !isReviewing.value);
 });
 
 // Watch for changes and blur the main app container
