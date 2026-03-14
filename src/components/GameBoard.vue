@@ -292,41 +292,9 @@ onMounted(() => {
     });
 });
 
-async function cleanupGameIfLast() {
-  if (activePlayersCount.value <= 1) {
-    // We are the absolute last person observing this game! Wipe the row securely.
-    const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/games?id=eq.${gameData.value.id}`;
-    
-    try {
-      await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-        },
-        keepalive: true
-      });
-    } catch(e) { /* ignore */ }
-  }
-}
-
-function handleBeforeUnload(e) {
-  cleanupGameIfLast();
-}
-
-async function leaveGracefully() {
-  await cleanupGameIfLast();
-  emit('leave-game');
-}
-
 onUnmounted(() => {
   window.removeEventListener('keydown', handleGlobalKeydown);
   window.removeEventListener('resize', scrollToBottom);
-  window.removeEventListener('beforeunload', handleBeforeUnload);
-
-  if (gameData.value.status !== 'waiting') {
-     cleanupGameIfLast();
-  }
 
   if (channel) {
     supabase.removeChannel(channel);
@@ -482,5 +450,9 @@ watch(isModalOpen, (isOpen) => {
     appEl.style.transition = 'filter 0.3s ease';
   }
 }, { immediate: true });
+
+function leaveGracefully() {
+  emit('leave-game');
+}
 
 </script>
