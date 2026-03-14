@@ -176,15 +176,6 @@ const myShadowColor = computed(() => isPlayer1.value ? 'var(--p1-shadow)' : 'var
 const showStartModal = ref(props.game.words.length === 0);
 function closeStartModal() { 
   showStartModal.value = false; 
-  // Focus the input box immediately after closing the modal if it's our turn
-  if (isMyTurn.value) {
-    nextTick(() => {
-      if (wordInput.value) {
-        wordInput.value.focus({ preventScroll: true });
-        setTimeout(scrollToBottom, 300);
-      }
-    });
-  }
 }
 
 function handleGlobalKeydown(e) {
@@ -277,16 +268,6 @@ onMounted(() => {
       }
 
       scrollToBottom();
-
-      // Auto-focus input when it becomes our turn
-      if (payload.new.status === 'in_progress' && payload.new.current_turn_player_id === props.playerId) {
-        nextTick(() => {
-          if (wordInput.value & !showStartModal.value) {
-              wordInput.value.focus({ preventScroll: true });
-              setTimeout(scrollToBottom, 300);
-          }
-        });
-      }
     })
     .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'games', filter: `id=eq.${props.game.id}` }, () => {
       // The other player deleted the game while we were looking at it!
