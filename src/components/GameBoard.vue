@@ -257,9 +257,25 @@ const previousWord = computed(() => {
   return gameData.value.start_word;
 });
 
+async function handleVisibilityChange() {
+  if (document.visibilityState === 'visible') {
+    const { data, error } = await supabase
+      .from('games')
+      .select('*')
+      .eq('id', props.game.id)
+      .single();
+    
+    if (data && !error) {
+      gameData.value = data;
+      scrollToBottom();
+    }
+  }
+}
+
 onMounted(() => {
   window.addEventListener('keydown', handleGlobalKeydown);
   window.addEventListener('resize', scrollToBottom);
+  document.addEventListener('visibilitychange', handleVisibilityChange);
 
   channel = supabase.channel(`game_${props.game.access_code}`, {
     config: { presence: { key: props.playerId } }
@@ -295,6 +311,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('keydown', handleGlobalKeydown);
   window.removeEventListener('resize', scrollToBottom);
+  document.removeEventListener('visibilitychange', handleVisibilityChange);
 
   if (channel) {
     supabase.removeChannel(channel);
